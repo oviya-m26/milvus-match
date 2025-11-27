@@ -1,0 +1,4 @@
+listing_id,title,company_id,company_name,location_city,location_state,location_country,skills,stipend_min_inr,stipend_max_inr,duration_weeks,mode,category,description,application_url,posted_date,source
+L1,Machine Learning Intern,,DataPulse,Delhi,Delhi,India,"Python,Machine Learning,pandas",15000,25000,12,Hybrid,Engineering,Work on ML models for social datasets.,https://example.com/apply/1,2024-05-01,kaggle-demo
+L2,Frontend Developer Intern,,ClearUI,Bengaluru,Karnataka,India,"React,JavaScript,css",20000,20000,8,Onsite,Engineering,Build dashboards for Indian internship allocation.,https://example.com/apply/2,2024-05-10,kaggle-demo
+L3,Data Analyst Trainee,,InSight Labs,,,Remote,"Structured Query Language,Excel,Power BI",10000,10000,10,online,Analytics,Analyze NSS socio-economic data sets.,https://example.com/apply/3,2024-04-20,kaggle-demo

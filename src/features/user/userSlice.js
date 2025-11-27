@@ -14,7 +14,6 @@ import {
   updateUserThunk,
   uploadUserImageThunk,
 } from "./userThunk"
-getUserFromLocalStorage
 
 const initialState = {
   isLoading: false,

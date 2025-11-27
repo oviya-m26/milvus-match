@@ -1,18 +1,25 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { FormRow } from "../components"
+import { FormRow, FormRowSelect } from "../components"
 import { toast } from "react-toastify"
-import { loginUser, registerUser } from "../features/user/userSlice"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { registerUser } from "../features/user/userSlice"
+import { useNavigate, Link } from "react-router-dom"
 import { CgSpinner } from "react-icons/cg"
-import { BsArrowRight } from "react-icons/bs"
+
 const initialState = {
   name: "",
   email: "",
   password: "",
-  isMember: true,
+  role: "applicant",
+  location: "",
+  state: "",
+  region: "",
+  socialCategory: "General",
+  skills: "",
+  resumeText: "",
 }
+
+const categoryOptions = ["General", "SC", "ST", "OBC", "EWS", "Women"]
 
 const RegisterForm = () => {
   const [values, setValues] = useState(initialState)
@@ -21,29 +28,31 @@ const RegisterForm = () => {
   const navigate = useNavigate()
 
   const handleChange = (e) => {
-    const name = e.target.name
-    const value = e.target.value
-    setValues({ ...values, [name]: value })
+    const { name, value } = e.target
+    setValues((prev) => ({ ...prev, [name]: value }))
   }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    const { name, email, password, isMember } = values
-    if (!email || !password || (!isMember && !name)) {
-      toast.error("Please fill out all fields")
+    if (!values.name || !values.email || !values.password) {
+      toast.error("Name, email and password are required")
       return
     }
-    if (isMember) {
-      dispatch(loginUser({ email: email, password: password }))
-      return
+
+    const payload = {
+      ...values,
+      skills: values.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean),
     }
-    dispatch(registerUser({ name: name, email: email, password: password }))
+    if (values.role !== "applicant") {
+      payload.skills = []
+      payload.resumeText = ""
+    }
+    dispatch(registerUser(payload))
   }
 
-  const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember })
-  }
-
-  // Navigate user to dashboard
   useEffect(() => {
     if (user) {
       navigate("/")
@@ -51,99 +60,124 @@ const RegisterForm = () => {
   }, [user, navigate])
 
   return (
-    <>
-      <form
-        className=" group  w-full px-4 md:w-2/3 md:px-0 lg:w-2/3 xl:w-1/2 "
-        onSubmit={handleSubmit}
-      >
-        <div className=" space-y-6 ">
-          {!values.isMember && (
-            <FormRow
-              type="text"
-              name="name"
-              placeholder="Enter your name"
-              value={values.name}
-              handleChange={handleChange}
-            />
-          )}
-          {/* Email */}
-          <div className="input_container">
-            <label htmlFor="email" className="label_style">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="youremail@gmail.com"
-              className=" w-full rounded-md border-none py-3  placeholder-gray-300 shadow shadow-gray-100 ring-1 ring-gray-300 transition-all duration-200 ease-in placeholder:lowercase hover:ring-primary focus:outline-none focus:ring-2 md:py-4 valid:[&:not(:placeholder-shown)]:ring-green-500 [&:not(:placeholder-shown):not(:focus):invalid~span]:block invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-400  "
-              required
-              pattern="[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-              value={values.email}
-              onChange={handleChange}
-            />
-            <span className="mt-2 hidden text-sm text-red-400">
-              Please enter a valid email address.{" "}
-            </span>
-          </div>
-          {/* Password */}
-          <div className="input_container">
-            <label htmlFor="password" className="label_style">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="**********"
-              value={values.password}
-              onChange={handleChange}
-              className="peer w-full rounded-md border-none  py-3 placeholder-gray-300 shadow shadow-gray-100 ring-1 ring-gray-300 transition-all duration-200 ease-in hover:ring-primary focus:outline-none focus:ring-2 md:py-4 valid:[&:not(:placeholder-shown)]:ring-green-500 [&:not(:placeholder-shown):not(:focus):invalid~span]:block invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-400   "
-              pattern=".{6,}"
-              required
-            />
-            <span className="mt-2 hidden text-sm text-red-400">
-              Password must be atleast 6 characters.{" "}
-            </span>
+    <form className="w-full space-y-6 px-4 md:w-2/3 md:px-0 lg:w-2/3 xl:w-1/2" onSubmit={handleSubmit}>
+      <div className="grid gap-6 md:grid-cols-2">
+        <FormRow
+          type="text"
+          name="name"
+          placeholder="Your full name"
+          value={values.name}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="location"
+          placeholder="Home city"
+          value={values.location}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="state"
+          placeholder="State / UT"
+          value={values.state}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="region"
+          placeholder="Region (rural/urban/aspirational)"
+          value={values.region}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="email"
+          name="email"
+          placeholder="you@example.com"
+          value={values.email}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="password"
+          name="password"
+          placeholder="Minimum 6 characters"
+          value={values.password}
+          handleChange={handleChange}
+        />
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <div>
+          <p className="label_style">I am signing up as</p>
+          <div className="flex space-x-4">
+            {["applicant", "employer"].map((role) => (
+              <label
+                key={role}
+                className={`flex flex-1 cursor-pointer items-center justify-center rounded-md border px-4 py-2 text-sm font-medium capitalize ${
+                  values.role === role ? "border-primary text-primary" : "border-gray-200 text-gray-600"
+                }`}
+              >
+                <input
+                  type="radio"
+                  className="sr-only"
+                  value={role}
+                  checked={values.role === role}
+                  name="role"
+                  onChange={handleChange}
+                />
+                {role}
+              </label>
+            ))}
           </div>
         </div>
-        {/* Login button */}
-        <div className="">
-          <button
-            type="submit"
-            className=" mt-20 flex w-full flex-row items-center justify-center rounded-md bg-primary px-10 py-5 tracking-wider text-white shadow transition-all duration-300 ease-in hover:bg-blue-900/90 focus:bg-blue-800/90 focus:outline-none disabled:cursor-not-allowed disabled:bg-primary/60 group-invalid:pointer-events-none group-invalid:opacity-70  "
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span>
-                {" "}
-                <CgSpinner className="mr-4 h-6 w-6  animate-spin " />{" "}
-              </span>
-            ) : null}
-            {values.isMember ? "Login" : "Create Account"}
-          </button>
+        <FormRowSelect
+          name="socialCategory"
+          labelText="Reservation Category"
+          options={categoryOptions}
+          value={values.socialCategory}
+          handleChange={handleChange}
+        />
+      </div>
+
+      {values.role === "applicant" && (
+        <div className="space-y-6">
+          <FormRow
+            type="text"
+            name="skills"
+            labelText="Skills & tools"
+            placeholder="python, gis, qualitative research"
+            value={values.skills}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="text"
+            name="resumeText"
+            labelText="Summary / resume highlights"
+            textArea={true}
+            placeholder="Tell us about your experience, projects or causes you care about."
+            value={values.resumeText}
+            handleChange={handleChange}
+          />
         </div>
-      </form>
-      <p className=" flex flex-col text-sm md:flex-row  ">
-        {values.isMember ? `Don't have an account?` : "Already a member?"}
+      )}
+
+      <div>
         <button
-          className="ml-2 font-medium text-primary "
-          onClick={toggleMember}
+          type="submit"
+          className="mt-4 flex w-full items-center justify-center rounded-md bg-primary px-10 py-4 text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-primary/60"
+          disabled={isLoading}
         >
-          {" "}
-          {values.isMember ? "Create an account" : "Login"}{" "}
+          {isLoading && <CgSpinner className="mr-3 h-5 w-5 animate-spin" />}
+          Create account
         </button>
-      </p>
-      <button
-        className="  group  flex  items-center justify-center rounded-md bg-secondary-900 px-6 py-1 capitalize  text-white/90  "
-        onClick={() => {
-          dispatch(loginUser({ email: "admin@test.com", password: "secret" }))
-        }}
-      >
-        Try demo app{" "}
-        <BsArrowRight className=" ml-2 animate-pulse  transition-all duration-200  ease-linear group-hover:translate-x-1  " />{" "}
-      </button>
-    </>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Already registered?{" "}
+          <Link className="font-semibold text-primary" to="/login">
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </form>
   )
 }
 

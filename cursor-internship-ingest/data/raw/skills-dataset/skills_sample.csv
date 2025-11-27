@@ -1,0 +1,10 @@
+skill_id,skill_name,skill_category,aliases
+S1,Python,Programming,"[\"py\"]"
+S2,Machine Learning,AI,"[\"ml\",\"machine-learning\"]"
+S3,React,Frontend,"[\"reactjs\"]"
+S4,JavaScript,Frontend,"[\"js\",\"javascript\"]"
+S5,Amazon Web Services,Cloud,"[\"aws\"]"
+S6,Structured Query Language,Data,"[\"sql\"]"
+S7,Power BI,Analytics,"[\"powerbi\"]"
+S8,Excel,Analytics,"[\"ms excel\"]"
+

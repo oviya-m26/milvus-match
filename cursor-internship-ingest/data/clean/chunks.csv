@@ -1,0 +1,10 @@
+chunk_id,source_type,source_id,chunk_index,text,tokens_estimate,top_skills,location_city,location_state,location_country,posted_date,source
+L1-0,listing,L1,0,Work on ML models for social datasets.,10,"[""Python"",""Machine Learning""]",Delhi,Delhi,India,2024-05-01,kaggle-demo
+L2-0,listing,L2,0,Build dashboards for Indian internship allocation.,13,[],Bengaluru,Karnataka,India,2024-05-10,kaggle-demo
+L3-0,listing,L3,0,Analyze NSS socio-economic data sets.,10,[],,,Remote,2024-04-20,kaggle-demo
+U1-0,resume,U1,0,Recent graduate with experience building data dashboards in React and automating analytics with Python.,26,"[""Machine Learning"",""React"",""Python""]",,,,,
+U2-0,resume,U2,0,AI undergrad focused on applied ML for public data sets.,14,"[""Python"",""Machine Learning""]",,,,,
+U1-0,resume,U1,0,Recent graduate with experience building data dashboards in React and automating analytics with Python.,26,"[""Machine Learning"",""React"",""Python""]",,,,,
+U2-0,resume,U2,0,AI undergrad focused on applied ML for public data sets.,14,"[""Python"",""Machine Learning""]",,,,,
+U1-0,resume,U1,0,Recent graduate with experience building data dashboards in React and automating analytics with Python.,26,"[""Machine Learning"",""React"",""Python""]",,,,,
+U2-0,resume,U2,0,AI undergrad focused on applied ML for public data sets.,14,"[""Python"",""Machine Learning""]",,,,,

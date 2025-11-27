@@ -1,4 +1,3 @@
-import UserImage from "../assets/user.jpg"
 import { Logo as LogoComponent } from "../components"
 import { RegisterForm } from "../components"
 
@@ -10,31 +9,29 @@ const Register = () => {
           {/* Right */}
           <aside className=" relative my-16 hidden flex-col justify-between space-y-10 overflow-hidden rounded-2xl bg-primary p-10 shadow-2xl md:w-1/2 lg:flex xl:w-1/3 ">
             <h1 className="text-2xl font-extrabold uppercase tracking-widest text-white ">
-              ApplicantAura.
+              MilvusMatch.
             </h1>
             <div className=" space-y-6 ">
               <h3 className=" text-3xl font-medium leading-[3rem] text-white xl:text-5xl xl:leading-[4rem] ">
                 Start your journey with us.
               </h3>
               <h4 className=" text-xl text-gray-300 ">
-                Track your job search progress with ApplicantAura - Never miss an
+                Track your job search progress with MilvusMatch - Never miss an
                 update on your job application status.{" "}
               </h4>
             </div>
             <div className=" py10 flex flex-col justify-between space-y-12 rounded-xl bg-secondary-800 p-4  ">
               <p className="text-gray-300">
-                ApplicantAura is a great web app for job seekers. It helps to keep
+                MilvusMatch is a great web app for job seekers. It helps to keep
                 track of job applications and their statuses. Highly recommended
                 for anyone actively searching for a job.
               </p>
               <div className="flex items-center space-x-6 ">
-                <img
-                  src={UserImage}
-                  alt=""
-                  className="h-14 w-14 rounded-lg object-cover"
-                />
+                <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-white/10 text-lg font-semibold text-white">
+                  AK
+                </div>
                 <div className=" space-y2 ">
-                  <h4 className="text-lg text-white "> Sara Williams </h4>
+                  <h4 className="text-lg text-white "> Ahana Kumar </h4>
                   <p className="text-gray-400">Software Engineer</p>
                 </div>
               </div>
@@ -45,7 +42,7 @@ const Register = () => {
           <article className=" my-10 flex  w-full flex-col items-center justify-between space-y-12 md:my-16   ">
             <div className=" flex flex-col items-center space-y-4 ">
               <LogoComponent className=" w-20 " />
-              <h4 className="text-4xl font-medium">Hello Again!</h4>
+              <h4 className="text-4xl font-medium">Create your account</h4>
             </div>
 
             <RegisterForm />

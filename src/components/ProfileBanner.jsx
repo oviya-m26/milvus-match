@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { clearStore } from "../features/user/userSlice"
 import UserImage from "./UserImage"
@@ -14,22 +14,29 @@ const ProfileBanner = () => {
     if (
       showLogoutButtonRef.current &&
       !showLogoutButtonRef.current.contains(e.target)
-    )
+    ) {
       setShowLogoutButton(false)
+    }
   }
   const toggleLogout = () => {
     dispatch(clearStore("Logout successful!"))
   }
-  document.addEventListener("mousedown", handleClickOutside)
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
   return (
     <>
-      <section className="sticky top-0 z-20 flex border-b border-gray-200 bg-white px-4 py-1 md:px-8">
-        <div className=" flex w-full items-center  justify-between space-x-6 ">
-          <h4 className="md:text-2xl text-black">
-            {" "}
-            Welcome back,{" "}
-            <span className="font-medium text-gray-800"> {`${user.name}!`}</span>{" "}
-          </h4>
+      <section className="sticky top-0 z-20 flex border-b border-gray-200 bg-white px-4 py-2 md:px-8">
+        <div className="flex w-full items-center justify-between space-x-6">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-gray-500">
+              {user?.role === "employer" ? "Employer Console" : "Applicant Workspace"}
+            </p>
+            <h4 className="text-xl font-semibold text-black md:text-2xl">
+              Welcome back, <span className="text-gray-800">{user?.name}!</span>
+            </h4>
+          </div>
           <div className=" relative " ref={showLogoutButtonRef}>
             <button
               className=" rounded-full border border-gray-200 hover:border-gray-300 transition-colors duration-200"

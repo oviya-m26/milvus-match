@@ -23,8 +23,7 @@ const FormRow = ({
           onChange={handleChange}
           cols="30"
           rows="5"
-          maxLength={50}
-          placeholder="Brief description about your job..."
+          placeholder={placeholder || "Type here..."}
           className={`input_style resize-none `}
         ></textarea>
       ) : (

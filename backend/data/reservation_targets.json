@@ -1,0 +1,68 @@
+{
+  "defaultReservation": {
+    "sc": 0.15,
+    "st": 0.075,
+    "obc": 0.27,
+    "ews": 0.1,
+    "women": 0.33
+  },
+  "defaultRegionBonus": {
+    "North East": 0.25,
+    "Central": 0.1,
+    "East": 0.05,
+    "Aspirational District": 0.15
+  },
+  "states": {
+    "Tamil Nadu": {
+      "reservation": {
+        "sc": 0.18,
+        "st": 0.01,
+        "obc": 0.5,
+        "ews": 0.1,
+        "women": 0.33
+      },
+      "regionBonus": {
+        "South": 0.05,
+        "Aspirational District": 0.2
+      }
+    },
+    "Maharashtra": {
+      "reservation": {
+        "sc": 0.13,
+        "st": 0.07,
+        "obc": 0.27,
+        "ews": 0.1,
+        "women": 0.33
+      },
+      "regionBonus": {
+        "West": 0.05,
+        "Central": 0.08
+      }
+    },
+    "Assam": {
+      "reservation": {
+        "sc": 0.08,
+        "st": 0.12,
+        "obc": 0.15,
+        "ews": 0.1,
+        "women": 0.33
+      },
+      "regionBonus": {
+        "North East": 0.3
+      }
+    },
+    "Uttar Pradesh": {
+      "reservation": {
+        "sc": 0.21,
+        "st": 0.02,
+        "obc": 0.27,
+        "ews": 0.1,
+        "women": 0.33
+      },
+      "regionBonus": {
+        "Central": 0.15,
+        "East": 0.08
+      }
+    }
+  }
+}

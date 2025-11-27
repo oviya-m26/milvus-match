@@ -1,0 +1,5 @@
+listing_id,title,company_name,location,skills,stipend,duration,mode,category,description,application_url,posted_date,source
+L1,Machine Learning Intern,DataPulse,New Delhi,python|ml|pandas,₹15k-25k /month,12 weeks,Hybrid,Engineering,"Work on ML models for social datasets.","https://example.com/apply/1",2024-05-01,kaggle-demo
+L2,Frontend Developer Intern,ClearUI,Bengaluru,react|javascript|css,20000 INR per month,8 weeks,Onsite,Engineering,"Build dashboards for Indian internship allocation.","https://example.com/apply/2",2024-05-10,kaggle-demo
+L3,Data Analyst Trainee,InSight Labs,Remote,sql|excel|power bi,₹10k per month,10 weeks,Online,Analytics,"Analyze NSS socio-economic data sets.","https://example.com/apply/3",2024-04-20,kaggle-demo
+

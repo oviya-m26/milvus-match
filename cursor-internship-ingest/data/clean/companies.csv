@@ -1,0 +1,4 @@
+company_id,company_name,industry,headquarters_city,headquarters_country,company_url,size_bucket,source
+C1,DataPulse,AI Research,,,https://datapulse.example,51-200,unknown
+C2,ClearUI,Software,,,https://clearui.example,11-50,unknown
+C3,InSight Labs,Analytics,,,https://insightlabs.example,201-500,unknown

@@ -24,6 +24,16 @@ const AddJobForm = () => {
     statusOptions,
     jobDescription,
     image,
+    skillsRequired,
+    quotaSC,
+    quotaST,
+    quotaOBC,
+    quotaEWS,
+    quotaWomen,
+    capacity,
+    statePriority,
+    salary,
+    applicationDeadline,
     isEditing,
     editJobId,
   } = useSelector((store) => store.job)
@@ -35,52 +45,75 @@ const AddJobForm = () => {
     const value = e.target.value
     dispatch(handleChangeFunction({ name, value }))
   }
+
   const handleUpload = (e) => {
     const imageFile = e.target.files[0]
+    if (!imageFile) return
     const formData = new FormData()
     formData.append("image", imageFile)
     dispatch(uploadImage(formData))
   }
 
+  const buildPayload = () => {
+    const quota = {
+      sc: quotaSC ? Number(quotaSC) : undefined,
+      st: quotaST ? Number(quotaST) : undefined,
+      obc: quotaOBC ? Number(quotaOBC) : undefined,
+      ews: quotaEWS ? Number(quotaEWS) : undefined,
+      women: quotaWomen ? Number(quotaWomen) : undefined,
+    }
+    const filteredQuota = Object.fromEntries(
+      Object.entries(quota).filter(([, value]) => value)
+    )
+
+    return {
+      position,
+      company,
+      jobLocation,
+      jobType,
+      status,
+      jobDescription,
+      image,
+      skillsRequired: skillsRequired
+        ? skillsRequired
+            .split(",")
+            .map((skill) => skill.trim())
+            .filter(Boolean)
+        : [],
+      reservationQuota: filteredQuota,
+      capacity: Number(capacity) || 1,
+      statePriority,
+      salary,
+      applicationDeadline: applicationDeadline
+        ? new Date(applicationDeadline).toISOString()
+        : null,
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!position || !company || !jobLocation) {
-      toast.error("Please fill out all fields")
+      toast.error("Please fill out all required fields")
       return
     }
+
+    const payload = buildPayload()
+
     if (isEditing) {
       dispatch(
         editJob({
           jobId: editJobId,
-          job: {
-            position,
-            company,
-            jobLocation,
-            jobType,
-            status,
-            jobDescription,
-            image,
-          },
+          job: payload,
         })
       )
       return
     }
-    // dispatch action
-    dispatch(
-      createJob({
-        position,
-        company,
-        jobLocation,
-        jobType,
-        status,
-        jobDescription,
-        image,
-      })
-    )
+
+    dispatch(createJob(payload))
   }
 
   useEffect(() => {
-    if (!isEditing) {
+    if (!isEditing && user?.location) {
       dispatch(
         handleChangeFunction({
           name: "jobLocation",
@@ -88,100 +121,175 @@ const AddJobForm = () => {
         })
       )
     }
-  }, [])
+  }, [dispatch, isEditing, user?.location])
 
   return (
-    <>
-      <form className="  space-y-6 xl:w-2/3 " onSubmit={handleSubmit}>
-        <div className=" grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-x-28   ">
-          {/* Position */}
+    <form className="space-y-10 xl:w-2/3" onSubmit={handleSubmit}>
+      <div className="grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-x-12">
+        <FormRow
+          type="text"
+          name="position"
+          labelText="Position*"
+          placeholder="Policy Intern"
+          value={position}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="company"
+          labelText="Organization*"
+          placeholder="NITI Aayog"
+          value={company}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="jobLocation"
+          labelText="Location*"
+          placeholder="New Delhi, India"
+          value={jobLocation}
+          handleChange={handleChange}
+        />
+        <FormRowSelect
+          name="jobType"
+          labelText="Opportunity Type"
+          value={jobType}
+          options={jobTypeOptions}
+          handleChange={handleChange}
+        />
+        <FormRowSelect
+          name="status"
+          labelText="Application Status"
+          value={status}
+          options={statusOptions}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="number"
+          name="capacity"
+          labelText="Total Slots"
+          placeholder="10"
+          value={capacity}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="statePriority"
+          labelText="Priority States / Regions"
+          placeholder="North-East, Aspirational districts"
+          value={statePriority}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="salary"
+          labelText="Stipend / Honorarium"
+          placeholder="₹15,000 per month"
+          value={salary}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="date"
+          name="applicationDeadline"
+          labelText="Application Deadline"
+          value={applicationDeadline}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          name="skillsRequired"
+          labelText="Skills / Domains"
+          placeholder="python, data analysis, rural development"
+          value={skillsRequired}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="file"
+          name="image"
+          labelText="Organization Logo"
+          handleChange={handleUpload}
+          acceptProps="image/*"
+          className="bg-white text-gray-500 file:mr-4 file:border-0 file:bg-white file:px-4 file:text-sm file:font-semibold file:text-black"
+        />
+        <div className="md:col-span-2">
           <FormRow
             type="text"
-            name="position"
-            placeholder="your position"
-            value={position}
+            name="jobDescription"
+            labelText="About the Opportunity"
+            placeholder="Brief description about your opportunity..."
+            textArea={true}
+            value={jobDescription}
             handleChange={handleChange}
           />
-          {/* Company */}
-          <FormRow
-            type="text"
-            name="company"
-            placeholder="your company name"
-            value={company}
-            handleChange={handleChange}
-          />
-          {/* Job location */}
-          <FormRow
-            type="text"
-            name="jobLocation"
-            labelText="Job Location"
-            placeholder="My city"
-            value={jobLocation}
-            handleChange={handleChange}
-          />
-          {/* Job type */}
-          <FormRowSelect
-            name="jobType"
-            labelText="job type"
-            value={jobType}
-            options={jobTypeOptions}
-            handleChange={handleChange}
-          />
-          {/* Job status */}
-          <FormRowSelect
-            name="status"
-            value={status}
-            options={statusOptions}
-            handleChange={handleChange}
-          />
-          {/* Company logo */}
-          <FormRow
-            type="file"
-            name="image"
-            handleChange={handleUpload}
-            acceptProps="image/*"
-            labelText="Company Logo"
-            className=" bg-white text-gray-400  file:mr-4
-            file:border-0 file:bg-white
-            file:px-4 file:text-sm file:font-semibold  file:text-black "
-          />
-          {/* About job textarea */}
-          <div className=" md:col-span-2 ">
-            <FormRow
-              type="text"
-              name="jobDescription"
-              labelText="About Job"
-              placeholder="Brief description about your job..."
-              textArea={true}
-              value={jobDescription}
-              handleChange={handleChange}
-            />
-          </div>
         </div>
-        <div className=" flex justify-end space-x-4 ">
-          <button
-            type="submit"
-            className=" flex w-44 justify-center rounded-md border border-gray-300 bg-black py-2 font-medium capitalize text-white outline-2 outline-black hover:outline hover:bg-gray-800 active:outline disabled:cursor-not-allowed disabled:bg-gray-500 disabled:opacity-50 disabled:outline-none text-sm transition-colors duration-200 "
-            disabled={isLoading}
-          > 
-            {isLoading ? (
-              <span>
-                {" "}
-                <CgSpinner className="mr-2 h-6 w-6  animate-spin " />{" "}
-              </span>
-            ) : null}
-            {isLoading ? "Adding Opportunity..." : "+ Add Opportunity"}
-          </button>
-          <button
-            type="button"
-            className="rounded-md border border-gray-300 bg-white px-10 py-2 font-medium capitalize outline-2 outline-black hover:outline hover:bg-gray-50 active:outline text-sm transition-colors duration-200 text-gray-700"
-            onClick={() => dispatch(clearValues())}
-          >
-            clear
-          </button>
+      </div>
+
+      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <h3 className="mb-4 text-lg font-semibold text-black">
+          Reservation & Quota Allocation
+        </h3>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <FormRow
+            type="number"
+            name="quotaSC"
+            labelText="SC Seats"
+            placeholder="2"
+            value={quotaSC}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="number"
+            name="quotaST"
+            labelText="ST Seats"
+            placeholder="1"
+            value={quotaST}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="number"
+            name="quotaOBC"
+            labelText="OBC Seats"
+            placeholder="3"
+            value={quotaOBC}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="number"
+            name="quotaEWS"
+            labelText="EWS Seats"
+            placeholder="1"
+            value={quotaEWS}
+            handleChange={handleChange}
+          />
+          <FormRow
+            type="number"
+            name="quotaWomen"
+            labelText="Women Seats"
+            placeholder="2"
+            value={quotaWomen}
+            handleChange={handleChange}
+          />
         </div>
-      </form>
-    </>
+      </div>
+
+      <div className="flex justify-end space-x-4">
+        <button
+          type="submit"
+          className="flex w-52 items-center justify-center rounded-md bg-black py-3 text-sm font-semibold uppercase tracking-wide text-white transition disabled:cursor-not-allowed disabled:bg-gray-500"
+          disabled={isLoading}
+        >
+          {isLoading && <CgSpinner className="mr-2 h-5 w-5 animate-spin" />}
+          {isEditing ? "Save Changes" : "Publish Opportunity"}
+        </button>
+        <button
+          type="button"
+          className="rounded-md border border-gray-300 bg-white px-8 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+          onClick={() => dispatch(clearValues())}
+        >
+          Clear
+        </button>
+      </div>
+    </form>
   )
 }
 

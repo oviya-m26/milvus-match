@@ -1,99 +1,114 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-hot-toast"
-import { FormRow } from "../components"
+import { FormRow, FormRowSelect } from "../components"
 import { updateUser } from "../features/user/userSlice"
 import { CgSpinner } from "react-icons/cg"
+
+const categoryOptions = ["General", "SC", "ST", "OBC", "EWS", "Women"]
 
 const ProfileForm = () => {
   const { user, isLoading } = useSelector((store) => store.user)
   const dispatch = useDispatch()
   const [userData, setUserData] = useState({
     name: user?.name || "",
-    lastName: user?.lastName || "",
-    email: user?.email || "",
     location: user?.location || "",
-    bio: user?.bio || "",
+    state: user?.state || "",
+    region: user?.region || "",
+    socialCategory: user?.socialCategory || "General",
+    skills: (user?.skills || []).join(", "),
+    resumeText: user?.resumeText || "",
   })
 
   const handleChange = (e) => {
-    const name = e.target.name
-    const value = e.target.value
-    setUserData({ ...userData, [name]: value })
+    const { name, value } = e.target
+    setUserData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const { image } = user
-    const { name, lastName, email, location, bio } = userData
-    if (!name || !lastName || !email || !location || !bio) {
-      toast.error("Please fill out all fields")
+    if (!userData.name) {
+      toast.error("Name cannot be empty")
       return
     }
-    dispatch(updateUser({ name, lastName, email, location, bio, image }))
+    const payload = {
+      ...userData,
+      skills: userData.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean),
+    }
+    dispatch(updateUser(payload))
   }
 
   return (
-    <form className=" space-y-6 xl:w-2/3 " onSubmit={handleSubmit}>
-      <div className="grid gap-y-8 md:grid-cols-2 md:gap-x-28">
-        {/* First Name */}
+    <form className="space-y-6 xl:w-2/3" onSubmit={handleSubmit}>
+      <div className="grid gap-y-8 md:grid-cols-2 md:gap-x-12">
         <FormRow
           type="text"
-          labelText="First Name"
+          labelText="Full name"
           name="name"
-          placeholder="Sarah"
+          placeholder="Aditi Sharma"
           value={userData.name}
           handleChange={handleChange}
         />
-        {/* Last name */}
         <FormRow
           type="text"
-          labelText="Last Name"
-          name="lastName"
-          placeholder="Williams"
-          handleChange={handleChange}
-          value={userData.lastName}
-        />
-        {/* Email */}
-        <FormRow
-          type="email"
-          name="email"
-          placeholder="youremail@gmail.com"
-          handleChange={handleChange}
-          value={userData.email}
-        />
-        {/* Location */}
-        <FormRow
-          type="text"
+          labelText="Home city"
           name="location"
-          placeholder="My city"
-          label_style_className="after:content-none"
-          handleChange={handleChange}
+          placeholder="Patna, Bihar"
           value={userData.location}
+          handleChange={handleChange}
         />
-        {/* Bio */}
+        <FormRow
+          type="text"
+          labelText="State / UT"
+          name="state"
+          placeholder="Bihar"
+          value={userData.state}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          labelText="Region"
+          name="region"
+          placeholder="Rural / Aspirational district"
+          value={userData.region}
+          handleChange={handleChange}
+        />
+        <FormRowSelect
+          name="socialCategory"
+          labelText="Reservation category"
+          options={categoryOptions}
+          value={userData.socialCategory}
+          handleChange={handleChange}
+        />
+        <FormRow
+          type="text"
+          labelText="Skills"
+          name="skills"
+          placeholder="climate policy, stata, hindi"
+          value={userData.skills}
+          handleChange={handleChange}
+        />
         <div className="md:col-span-2">
           <FormRow
             type="text"
-            name="bio"
+            name="resumeText"
+            labelText="Profile summary"
             textArea={true}
-            placeholder="Brief description about yourself..."
+            placeholder="Share highlights, projects or causes."
+            value={userData.resumeText}
             handleChange={handleChange}
-            value={userData.bio}
           />
         </div>
       </div>
       <button
-        className=" ml-auto flex  w-44 justify-center rounded-md border border-gray-300 bg-primary py-2 text-sm font-medium capitalize text-white outline-2 outline-primary hover:outline active:outline disabled:cursor-not-allowed disabled:bg-secondary-500 disabled:opacity-50 disabled:outline-none "
+        className="ml-auto flex w-44 items-center justify-center rounded-md border border-gray-300 bg-primary py-2 text-sm font-medium uppercase text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-secondary-500 disabled:opacity-50"
         disabled={isLoading}
       >
-        {isLoading ? (
-          <span>
-            {" "}
-            <CgSpinner className="mr-2 h-6 w-6  animate-spin " />{" "}
-          </span>
-        ) : null}
-        {isLoading ? "Please wait..." : "Save changes"}
+        {isLoading && <CgSpinner className="mr-2 h-5 w-5 animate-spin" />}
+        Save profile
       </button>
     </form>
   )

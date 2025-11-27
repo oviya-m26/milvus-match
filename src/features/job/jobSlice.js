@@ -19,6 +19,16 @@ const initialState = {
   statusOptions: ["pending", "declined", "interview"],
   jobDescription: "",
   image: "",
+  skillsRequired: "",
+  quotaSC: "",
+  quotaST: "",
+  quotaOBC: "",
+  quotaEWS: "",
+  quotaWomen: "",
+  capacity: 1,
+  statePriority: "",
+  salary: "",
+  applicationDeadline: "",
   isEditing: false,
   editJobId: "",
 }
@@ -45,7 +55,30 @@ export const jobSlice = createSlice({
       }
     },
     setEditJob: (state, { payload }) => {
-      return { ...state, isEditing: true, ...payload }
+    return {
+      ...state,
+      isEditing: true,
+      editJobId: payload.editJobId,
+      position: payload.position || "",
+      company: payload.company || "",
+      jobLocation: payload.jobLocation || "",
+      jobType: payload.jobType || "full-time",
+      status: payload.status || "pending",
+      jobDescription: payload.jobDescription || "",
+      image: payload.image || "",
+      skillsRequired: (payload.skillsRequired || []).join(", "),
+      quotaSC: payload.reservationQuota?.sc || "",
+      quotaST: payload.reservationQuota?.st || "",
+      quotaOBC: payload.reservationQuota?.obc || "",
+      quotaEWS: payload.reservationQuota?.ews || "",
+      quotaWomen: payload.reservationQuota?.women || "",
+      capacity: payload.capacity || 1,
+      statePriority: payload.statePriority || "",
+      salary: payload.salary || "",
+      applicationDeadline: payload.applicationDeadline
+        ? payload.applicationDeadline.split("T")[0]
+        : "",
+    }
     },
   },
   extraReducers: (builder) => {

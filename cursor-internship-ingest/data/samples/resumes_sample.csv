@@ -1,0 +1,6 @@
+user_id,name,education,experience_years,skills,projects,raw_resume_text,source
+U1,Riya Sen,"[{""degree"":""B.Tech CSE"",""year"":2024}] ",0.5,"[""python"",""react"",""sql""]","Built Skill India dashboard","Recent graduate with experience building data dashboards in React and automating analytics with Python.",sample
+U2,Aarav Patel,"[{""degree"":""B.Tech AI"",""year"":2025}] ",0.2,"[""ml"",""python"",""pandas""]","Milvus poster recommender","AI undergrad focused on applied ML for public data sets.",sample
+
+
+

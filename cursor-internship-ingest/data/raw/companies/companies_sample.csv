@@ -1,0 +1,5 @@
+company_id,company_name,industry,headquarters,company_url,size_bucket
+C1,DataPulse,AI Research,New Delhi,https://datapulse.example,51-200
+C2,ClearUI,Software,Bengaluru,https://clearui.example,11-50
+C3,InSight Labs,Analytics,Mumbai,https://insightlabs.example,201-500
+
