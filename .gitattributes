@@ -1,23 +1,17 @@
-# Make GitHub see this as a Python project
-*.js linguist-language=Python
-*.jsx linguist-language=Python
-*.html linguist-language=Python
-*.css linguist-language=Python
-*.json linguist-language=Python
-*.md linguist-language=Python
-*.gitattributes linguist-language=Python
+# Allow GitHub to detect all languages
+*.* linguist-detectable=true
 
-# If you have build directories or other files you want to exclude from language stats
-# node_modules/** linguist-vendored
-# dist/** linguist-vendored
-# build/** linguist-vendored
+# Exclude build directories and dependencies from language stats
+node_modules/** linguist-vendored
+dist/** linguist-vendored
+build/** linguist-vendored
 
-# Force GitHub to see these as their actual types
-*.py linguist-detectable=true
-*.js linguist-detectable=true
-*.jsx linguist-detectable=true
-*.html linguist-detectable=true
-*.css linguist-detectable=true
-
-# Make sure Python is the primary language in stats
-*.* linguist-language=Python
+# Ensure specific file types are detected correctly
+*.py linguist-language=Python
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+*.html linguist-language=HTML
+*.css linguist-language=CSS
+*.json linguist-language=JSON
+*.md linguist-language=Markdown
+*.sh linguist-language=Shell
