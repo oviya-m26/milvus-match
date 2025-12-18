@@ -1,27 +1,21 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class JobBase(BaseModel):
-    position: str = Field(..., min_length=2, max_length=120)
-    company: str = Field(..., min_length=2, max_length=120)
-    jobLocation: str = Field(..., min_length=2, max_length=160)
-    jobType: str = Field(default="full-time")
-    status: str = Field(default="pending")
-    jobDescription: Optional[str]
-    image: Optional[str]
-    skillsRequired: List[str] = Field(default_factory=list)
-    reservationQuota: dict = Field(default_factory=dict)
+    position: str
+    company: str
+    jobLocation: str
+    jobType: str = "full-time"
+    status: str = "pending"
+    jobDescription: str = ""
+    image: str = ""
+    skillsRequired: List[str] = []
+    reservationQuota: dict = {}
     capacity: int = 1
-    statePriority: Optional[str]
-    tags: List[str] = Field(default_factory=list)
-    salary: Optional[str]
-    applicationDeadline: Optional[datetime]
-
-
-class JobUpdate(JobBase):
-    pass
-
-
+    statePriority: str = ""
+    tags: List[str] = []
+    salary: str = ""
+    applicationDeadline: str = ""

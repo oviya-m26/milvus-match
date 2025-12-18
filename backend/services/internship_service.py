@@ -2,8 +2,9 @@ import logging
 from typing import List, Dict, Optional
 from datetime import datetime
 import pandas as pd
-from backend.models import Internship, db
-from backend.services.embedding_service import encode_text
+from models import Internship
+from extensions import db
+from .embedding_service import encode_text
 
 class InternshipService:
     """Service for handling internship data processing and management."""

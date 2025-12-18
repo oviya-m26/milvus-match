@@ -6,6 +6,7 @@ const initialFilterState = {
   search: "",
   searchJobStatus: "all",
   searchJobType: "all",
+  searchLocation: "all",
   sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
 }

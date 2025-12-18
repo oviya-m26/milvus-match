@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: applicant-aura
+Version: 0.1.0
+Requires-Python: >=3.8
+Requires-Dist: flask
+Requires-Dist: flask-sqlalchemy
+Requires-Dist: flask-cors
+Requires-Dist: flask-bcrypt
+Requires-Dist: flask-jwt-extended
+Requires-Dist: pymilvus
+Requires-Dist: sentence-transformers
+Requires-Dist: python-dotenv
+Requires-Dist: pydantic
+Dynamic: requires-dist
+Dynamic: requires-python

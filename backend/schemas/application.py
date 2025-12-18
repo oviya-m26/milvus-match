@@ -1,10 +1,6 @@
-from typing import Optional
-
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class ApplicationCreate(BaseModel):
-    jobId: str = Field(..., min_length=1)
-    justification: Optional[str]
-
-
+    jobId: str
+    justification: str = ""

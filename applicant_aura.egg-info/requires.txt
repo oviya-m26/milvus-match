@@ -1,0 +1,9 @@
+flask
+flask-sqlalchemy
+flask-cors
+flask-bcrypt
+flask-jwt-extended
+pymilvus
+sentence-transformers
+python-dotenv
+pydantic

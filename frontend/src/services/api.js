@@ -2,10 +2,12 @@ import axios from 'axios';
 
 // Create axios instance with base URL
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1',
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
+  withCredentials: true,
 });
 
 // Add request interceptor to include auth token
@@ -43,11 +45,11 @@ api.interceptors.response.use(
 
 // Auth API
 export const authAPI = {
-  login: (credentials) => api.post('/api/auth/login', credentials),
-  register: (userData) => api.post('/api/auth/register', userData),
-  getMe: () => api.get('/api/auth/me'),
-  forgotPassword: (email) => api.post('/api/auth/forgot-password', { email }),
-  resetPassword: (token, data) => api.post(`/api/auth/reset-password/${token}`, data),
+  login: (credentials) => api.post('/auth/login', credentials),
+  register: (userData) => api.post('/auth/register', userData),
+  getMe: () => api.get('/auth/me'),
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  resetPassword: (token, data) => api.post(`/auth/reset-password/${token}`, data),
 };
 
 // Users API

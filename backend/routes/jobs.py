@@ -21,11 +21,18 @@ def _apply_filters(query, args):
     status = args.get("status", "all")
     job_type = args.get("jobType", "all")
     search = args.get("search")
+    location = args.get("location", "all")
 
     if status != "all":
         query = query.filter_by(status=status)
     if job_type != "all":
         query = query.filter_by(job_type=job_type)
+    if location != "all" and location:
+        # Filter by location (city or state)
+        location_like = f"%{location.lower()}%"
+        query = query.filter(
+            func.lower(Job.job_location).like(location_like)
+        )
     if search:
         like = f"%{search.lower()}%"
         query = query.filter(

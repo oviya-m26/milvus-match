@@ -1,0 +1,7 @@
+README.md
+setup.py
+applicant_aura.egg-info/PKG-INFO
+applicant_aura.egg-info/SOURCES.txt
+applicant_aura.egg-info/dependency_links.txt
+applicant_aura.egg-info/requires.txt
+applicant_aura.egg-info/top_level.txt

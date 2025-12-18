@@ -19,6 +19,7 @@ const JobContainer = () => {
     search,
     searchJobStatus,
     searchJobType,
+    searchLocation,
     sort,
     sortOptions,
   } = useSelector((store) => store.allJobs)
@@ -29,7 +30,7 @@ const JobContainer = () => {
   // dispatch the getAllJobs action when component is rendering
   useEffect(() => {
     dispatch(getAllJobs())
-  }, [page, search, searchJobStatus, searchJobType, sort])
+  }, [page, search, searchJobStatus, searchJobType, searchLocation, sort, dispatch])
 
   const handleSort = (e) => {
     dispatch(handleChange({ name: e.target.name, value: e.target.value }))

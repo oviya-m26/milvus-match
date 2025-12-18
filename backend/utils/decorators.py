@@ -6,6 +6,36 @@ from backend.models import User
 from backend.utils.jwt import decode_token
 
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Get the token from the request
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({'msg': 'Missing or invalid token'}), 401
+        
+        # Extract the token
+        token = auth_header.split(' ')[1]
+        
+        try:
+            # Decode the token to get user info
+            data = decode_token(token)
+            user = User.query.get(data['sub'])
+            
+            # Check if user is admin
+            if not user or user.role != 'admin':
+                return jsonify({'msg': 'Admin access required'}), 403
+                
+            # Add user to the kwargs
+            kwargs['current_user'] = user
+            return f(*args, **kwargs)
+            
+        except Exception as e:
+            return jsonify({'msg': 'Invalid token'}), 401
+            
+    return decorated_function
+
+
 def token_required(role: str | None = None):
     def decorator(func):
         @wraps(func)

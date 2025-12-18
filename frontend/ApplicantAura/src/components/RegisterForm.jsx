@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { FormRow } from "../components"
-import { toast } from "react-toastify"
+import { toast } from "react-hot-toast"
 import { loginUser, registerUser } from "../features/user/userSlice"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -36,7 +36,12 @@ const RegisterForm = () => {
       dispatch(loginUser({ email: email, password: password }))
       return
     }
-    dispatch(registerUser({ name: name, email: email, password: password }))
+    dispatch(registerUser({ 
+      name: name, 
+      email: email, 
+      password: password,
+      role: "applicant" // Default role for new users
+    }))
   }
 
   const toggleMember = () => {

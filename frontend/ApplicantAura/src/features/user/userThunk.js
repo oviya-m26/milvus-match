@@ -5,7 +5,8 @@ import { clearValues } from "../job/jobSlice"
 
 //** ==================== Register User ==================== */
 export const registerUserThunk = async (url, user, thunkAPI) => {
-  const isDemo = !import.meta.env.VITE_REACT_APP_BASE_URL
+  const apiBaseUrl = import.meta.env.VITE_REACT_APP_BASE_URL
+  const isDemo = !apiBaseUrl || apiBaseUrl.trim() === "" || apiBaseUrl === "/api/v1"
   if (isDemo) {
     // Demo mode: return a mock user so buttons "work" without backend
     await new Promise((r) => setTimeout(r, 400))
@@ -22,13 +23,15 @@ export const registerUserThunk = async (url, user, thunkAPI) => {
     const response = await customFetch.post(url, user)
     return response.data
   } catch (error) {
-    return checkForUnauthorizedResponse(error, thunkAPI)
+    const errorMessage = checkForUnauthorizedResponse(error, thunkAPI)
+    return thunkAPI.rejectWithValue(errorMessage)
   }
 }
 
 //** ==================== Login User ==================== */
 export const loginUserThunk = async (user, thunkAPI) => {
-  const isDemo = !import.meta.env.VITE_REACT_APP_BASE_URL
+  const apiBaseUrl = import.meta.env.VITE_REACT_APP_BASE_URL
+  const isDemo = !apiBaseUrl || apiBaseUrl.trim() === "" || apiBaseUrl === "/api/v1"
   if (isDemo) {
     await new Promise((r) => setTimeout(r, 300))
     return {
@@ -44,7 +47,8 @@ export const loginUserThunk = async (user, thunkAPI) => {
     const response = await customFetch.post("/auth/login", user)
     return response.data
   } catch (error) {
-    return checkForUnauthorizedResponse(error, thunkAPI)
+    const errorMessage = checkForUnauthorizedResponse(error, thunkAPI)
+    return thunkAPI.rejectWithValue(errorMessage)
   }
 }
 

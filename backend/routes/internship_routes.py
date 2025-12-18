@@ -4,9 +4,10 @@ from werkzeug.utils import secure_filename
 import os
 import uuid
 
-from backend.models import Internship, User, db
-from backend.services.internship_service import internship_service
-from backend.utils.decorators import admin_required
+from extensions import db
+from models import Internship, User
+from services.internship_service import internship_service
+from utils.decorators import admin_required
 
 bp = Blueprint('internship', __name__, url_prefix='/api/internships')
 

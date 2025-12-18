@@ -15,34 +15,55 @@ applications_bp = Blueprint("applications", __name__)
 @applications_bp.post("")
 @token_required("applicant")
 def create_application():
+    # Get raw request data first
+    request_data = request.get_json() or {}
+    
+    # Validate with Pydantic
     try:
-        payload = ApplicationCreate(**request.get_json())
+        payload = ApplicationCreate(**request_data)
     except ValidationError as err:
         return error_response(err.errors(), 422)
-    job = Job.query.get(payload.jobId)
-    if not job:
-        return error_response("Job not found", 404)
-    existing = Application.query.filter_by(
-        user_id=request.user.id, job_id=job.id
-    ).first()
-    if existing:
-        return error_response("Application already exists", 400)
+    except Exception as e:
+        return error_response(f"Invalid request data: {str(e)}", 400)
 
-    matcher = MatchingService()
-    match_result = matcher.score_single(request.user, job)
+    try:
+        # Get jobId from request data (Pydantic 1.10.13 has issues with required fields)
+        job_id = request_data.get("jobId")
+        justification = request_data.get("justification", "")
+        
+        if not job_id:
+            return error_response("Job ID is required", 400)
+        
+        job = Job.query.get(job_id)
+        if not job:
+            return error_response("Job not found", 404)
+        
+        existing = Application.query.filter_by(
+            user_id=request.user.id, job_id=job.id
+        ).first()
+        if existing:
+            return error_response("Application already exists", 400)
 
-    application = Application(
-        user_id=request.user.id,
-        job_id=job.id,
-        justification=payload.justification,
-        match_score=match_result.score,
-        match_metadata={"reasons": match_result.reasons},
-    )
-    db.session.add(application)
-    db.session.commit()
-    response = application.to_dict()
-    response["job"] = job.to_dict()
-    return success_response({"application": response}, 201)
+        matcher = MatchingService()
+        match_result = matcher.score_single(request.user, job)
+
+        application = Application(
+            user_id=request.user.id,
+            job_id=job.id,
+            justification=justification,
+            match_score=match_result.score,
+            match_metadata={"reasons": match_result.reasons},
+        )
+        db.session.add(application)
+        db.session.commit()
+        response = application.to_dict()
+        response["job"] = job.to_dict()
+        return success_response({"application": response}, 201)
+    except Exception as e:
+        db.session.rollback()
+        from flask import current_app
+        current_app.logger.error(f"Application creation error: {str(e)}", exc_info=True)
+        return error_response(f"Application failed: {str(e)}", 500)
 
 
 @applications_bp.get("/me")
