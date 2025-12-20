@@ -2,7 +2,10 @@ import React from "react"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { showStats } from "../features/allJobs/allJobsSlice"
-import { ChartsContainer, StatsContainer, Loading, NoData } from "../components"
+import ChartsContainer from "./ChartsContainer"
+import StatsContainer from "./StatsContainer"
+import Loading from "./Loading"
+import NoData from "./NoData"
 
 const Overview = () => {
   const { isLoading, monthlyApplications } = useSelector(

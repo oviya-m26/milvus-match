@@ -1,4 +1,4 @@
-## MilvusMatch PM Internship Scheme Prototype
+## MilvusMatch — PM Internship Scheme Prototype
 
 Front-end prototype demonstrating an AI-based smart allocation engine for the PM Internship Scheme.
 

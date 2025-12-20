@@ -28,6 +28,7 @@ import NoJobsMessage from "./NoJobsMessage"
 import JobTag from "./JobTag"
 import Logout from "./Logout"
 import NoData from "./NoData"
+import ApplicationsGraph from "./ApplicationsGraph"
 
 export {
   Logout,
@@ -60,4 +61,5 @@ export {
   SidebarNavLink,
   JobCard,
   SearchBarFilter,
+  ApplicationsGraph,
 }

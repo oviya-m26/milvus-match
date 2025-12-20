@@ -13,6 +13,7 @@ const Internships = lazy(() => import("./pages/dashboard/Internships"))
 const AddJob = lazy(() => import("./pages/dashboard/AddJob"))
 const Profile = lazy(() => import("./pages/dashboard/Profile"))
 const Applications = lazy(() => import("./pages/dashboard/Applications"))
+const JobDetails = lazy(() => import("./pages/dashboard/JobDetails"))
 const DemoMatch = lazy(() => import("./pages/DemoMatch.jsx"))
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="add-job" element={<AddJob />} />
             <Route path="applications" element={<Applications />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="job/:id" element={<JobDetails />} />
           </Route>
           <Route path="landing" element={<Landing />} />
           <Route path="demo" element={<DemoMatch />} />

@@ -33,20 +33,20 @@ const DemoMatch = () => {
             <h3 className=" mb-2 text-lg font-semibold ">Candidate Profile</h3>
             <div className=" space-y-4 ">
               <div>
-                <label className=" block text-sm font-medium text-gray-700 ">Skills (comma-separated)</label>
-                <input value={skills} onChange={(e) => setSkills(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="python, sql, excel" />
+                <label htmlFor="skills" className=" block text-sm font-medium text-gray-700 ">Skills (comma-separated)</label>
+                <input id="skills" value={skills} onChange={(e) => setSkills(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="python, sql, excel" />
               </div>
               <div>
-                <label className=" block text-sm font-medium text-gray-700 ">Preferred Sectors</label>
-                <input value={preferredSectors} onChange={(e) => setPreferredSectors(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="IT, Manufacturing" />
+                <label htmlFor="preferredSectors" className=" block text-sm font-medium text-gray-700 ">Preferred Sectors</label>
+                <input id="preferredSectors" value={preferredSectors} onChange={(e) => setPreferredSectors(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="IT, Manufacturing" />
               </div>
               <div>
-                <label className=" block text-sm font-medium text-gray-700 ">Preferred Locations</label>
-                <input value={preferredLocations} onChange={(e) => setPreferredLocations(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="Delhi, Bengaluru" />
+                <label htmlFor="preferredLocations" className=" block text-sm font-medium text-gray-700 ">Preferred Locations</label>
+                <input id="preferredLocations" value={preferredLocations} onChange={(e) => setPreferredLocations(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="Delhi, Bengaluru" />
               </div>
               <div>
-                <label className=" block text-sm font-medium text-gray-700 ">Affirmative Tags</label>
-                <input value={categoryTags} onChange={(e) => setCategoryTags(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="rural, women, aspirational-district" />
+                <label htmlFor="categoryTags" className=" block text-sm font-medium text-gray-700 ">Affirmative Tags</label>
+                <input id="categoryTags" value={categoryTags} onChange={(e) => setCategoryTags(e.target.value)} className=" mt-1 w-full rounded-md border border-gray-300 p-2 " placeholder="rural, women, aspirational-district" />
               </div>
               <div className=" flex items-center space-x-2 ">
                 <input id="pp" type="checkbox" checked={hasPastParticipation} onChange={(e) => setHasPastParticipation(e.target.checked)} />

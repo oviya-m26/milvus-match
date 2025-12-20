@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { FormRow } from "../components"
+import FormRow from "./FormRow"
 import { toast } from "react-hot-toast"
 import { loginUser, registerUser } from "../features/user/userSlice"
 import { useEffect } from "react"
@@ -11,7 +11,7 @@ const initialState = {
   name: "",
   email: "",
   password: "",
-  isMember: true,
+  isMember: false,
 }
 
 const RegisterForm = () => {

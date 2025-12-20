@@ -23,7 +23,7 @@ const SearchBarFilter = () => {
     let timeoutID
     return (e) => {
       setLocalSearch(e.target.value)
-      clearTimeout()
+      clearTimeout(timeoutID)
       timeoutID = setTimeout(() => {
         dispatch(handleChange({ name: e.target.name, value: e.target.value }))
       }, 2000)

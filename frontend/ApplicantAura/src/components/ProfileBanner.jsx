@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { clearStore } from "../features/user/userSlice"
 import UserImage from "./UserImage"
@@ -28,7 +28,7 @@ const ProfileBanner = () => {
           <h4 className="md:text-2xl text-black">
             {" "}
             Welcome back,{" "}
-            <span className="font-medium text-gray-800"> {`${user.name}!`}</span>{" "}
+            <span className="font-medium text-gray-800"> {`${user?.name || "User"}!`}</span>{" "}
           </h4>
           <div className=" relative " ref={showLogoutButtonRef}>
             <button

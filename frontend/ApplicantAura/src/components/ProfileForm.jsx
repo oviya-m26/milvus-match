@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-hot-toast"
-import { FormRow } from "../components"
+import FormRow from "./FormRow"
 import { updateUser } from "../features/user/userSlice"
 import { CgSpinner } from "react-icons/cg"
 

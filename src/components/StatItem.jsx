@@ -1,4 +1,4 @@
-const StatItem = ({ title, icon, count, color, bcg }) => {
+const StatItem = ({ title, icon, count }) => {
   return (
     <article className=" rounded-2xl bg-white border border-gray-200 text-black shadow-lg hover:shadow-xl transition-shadow duration-300">
       <div className=" flex flex-row items-center justify-center space-x-6 py-4 px-5 ">

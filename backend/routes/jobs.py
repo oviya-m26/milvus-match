@@ -5,7 +5,7 @@ from pydantic import ValidationError
 from sqlalchemy import func, or_
 
 from backend.extensions import db
-from backend.models import Job
+from backend.models import Job, Application
 from backend.schemas.job import JobBase
 from backend.services.embedding_service import encode_text
 from backend.services.milvus_client import MilvusClient
@@ -150,6 +150,27 @@ def stats():
     return success_response(
         {"defaultStats": default_stats, "monthlyApplications": monthly_applications}
     )
+
+
+@jobs_bp.get("/<job_id>")
+@token_required()
+def get_job(job_id: str):
+    job = Job.query.get(job_id)
+    if not job:
+        return error_response("Job not found", 404)
+        
+    job_dict = job.to_dict()
+    
+    # If applicant, check if applied
+    if hasattr(request, "user") and request.user and request.user.role == "applicant":
+        application = Application.query.filter_by(
+            user_id=request.user.id, 
+            job_id=job_id
+        ).first()
+        job_dict["hasApplied"] = application is not None
+        job_dict["applicationStatus"] = application.status if application else None
+        
+    return success_response({"job": job_dict})
 
 
 @jobs_bp.patch("/<job_id>")

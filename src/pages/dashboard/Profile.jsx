@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { UserImage, ProfileForm, Logout } from "../../components"
+import { UserImage, ProfileForm } from "../../components"
 import { uploadUserImage } from "../../features/user/userSlice"
 import { MdCameraAlt } from "react-icons/md"
 const Profile = () => {

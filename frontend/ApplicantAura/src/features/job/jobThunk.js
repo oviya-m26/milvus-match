@@ -1,4 +1,5 @@
-import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios"
+import customFetch from "../../utils/axios"
+import { checkForUnauthorizedResponse } from "../../utils/auth"
 import { getAllJobs, hideLoading, showLoading } from "../allJobs/allJobsSlice"
 import { clearValues } from "./jobSlice"
 
@@ -31,6 +32,16 @@ export const editJobThunk = async ({ jobId, job }, thunkAPI) => {
   try {
     const response = await customFetch.patch(`/jobs/${jobId}`, job)
     thunkAPI.dispatch(clearValues())
+    return response.data
+  } catch (error) {
+    return checkForUnauthorizedResponse(error, thunkAPI)
+  }
+}
+
+//** ==================== GET SINGLE JOB ==================== */
+export const getJobThunk = async (jobId, thunkAPI) => {
+  try {
+    const response = await customFetch.get(`/jobs/${jobId}`)
     return response.data
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI)

@@ -1,10 +1,10 @@
 const variants = {
-  declined: "bg-red-100 text-red-700",
-  interview: "bg-black text-white",
-  pending: "bg-gray-100 text-gray-700",
-  matched: "bg-blue-100 text-blue-700",
-  selected: "bg-green-100 text-green-700",
-  applied: "bg-primary/10 text-primary",
+  declined: "bg-red-100 text-red-800",
+  interview: "bg-gray-900 text-white",
+  pending: "bg-yellow-100 text-yellow-800",
+  matched: "bg-blue-100 text-blue-800",
+  selected: "bg-green-100 text-green-800",
+  applied: "bg-purple-100 text-purple-800",
 }
 
 const JobTag = ({ status = "pending" }) => {
@@ -14,8 +14,8 @@ const JobTag = ({ status = "pending" }) => {
     : "pending"
   return (
     <span
-      className={`flex items-center justify-center rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-widest ${
-        variants[normalized] || "bg-gray-100 text-gray-700"
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+        variants[normalized] || "bg-gray-100 text-gray-800"
       }`}
     >
       {label}

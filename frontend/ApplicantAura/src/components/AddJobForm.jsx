@@ -1,7 +1,8 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
-import { FormRow, FormRowSelect } from "../components"
+import FormRow from "./FormRow"
+import FormRowSelect from "./FormRowSelect"
 import { CgSpinner } from "react-icons/cg"
 
 import {

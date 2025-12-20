@@ -1,5 +1,6 @@
-import { Logo, SidebarNavLink } from "../components"
-import { Logout } from "../components"
+import Logo from "./Logo"
+import SidebarNavLink from "./SidebarNavLink"
+import Logout from "./Logout"
 const Sidebar = () => {
   return (
     <>

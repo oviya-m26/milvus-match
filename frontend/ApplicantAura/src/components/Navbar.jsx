@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Logo } from "../components"
+import Logo from "./Logo"
 
 const Navbar = () => {
   return (
@@ -10,11 +10,11 @@ const Navbar = () => {
       </div>
       <div className=" hidden md:flex md:space-x-8  ">
         <Link
-          to="/register"
-          className=" rounded-md px-4 py-3 font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200"
-        >
-          Log in
-        </Link>
+                  to="/login"
+                  className=" rounded-md px-4 py-3 font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                >
+                  Log in
+                </Link>
         <Link
           to="/register"
           className=" rounded-md px-4 py-3 text-xs font-medium text-white transition-colors duration-200 md:text-sm " style={{ backgroundColor: "#138808" }}

@@ -1,7 +1,8 @@
 import React from "react"
 import { useState } from "react"
 import { useSelector } from "react-redux"
-import { AreaChartComponent, BarChartComponent } from "../components"
+import AreaChartComponent from "./AreaChart"
+import BarChartComponent from "./BarChart"
 
 const ChartsContainer = () => {
   const [barChart, setBarChart] = useState(true)

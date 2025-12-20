@@ -56,6 +56,7 @@ def token_required(role: str | None = None):
                     return jsonify({"msg": "Insufficient permissions"}), 403
                 request.user = user
             except Exception as exc:  # noqa: BLE001
+                print(f"Auth Error: {exc}")
                 return jsonify({"msg": f"Invalid token: {exc}"}), 401
             return func(*args, **kwargs)
 

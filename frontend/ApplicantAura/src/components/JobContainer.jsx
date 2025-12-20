@@ -1,11 +1,9 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  JobCard,
-  Loading,
-  NoJobsMessage,
-  PaginationButton,
-} from "../components"
+import JobCard from "./JobCard"
+import Loading from "./Loading"
+import NoJobsMessage from "./NoJobsMessage"
+import PaginationButton from "./PaginationButton"
 import { getAllJobs, handleChange } from "../features/allJobs/allJobsSlice"
 
 const JobContainer = () => {

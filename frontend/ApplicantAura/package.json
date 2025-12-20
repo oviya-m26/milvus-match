@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{js,jsx}\" --max-warnings=0",
+    "test": "vitest",
+    "format": "prettier --write \"src/**/*.{js,jsx,css,md,json}\""
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.0",
@@ -32,6 +35,14 @@
     "prettier-plugin-tailwindcss": "^0.3.0",
     "tailwindcss": "^3.2.4",
     "vite": "^3.1.0",
+    "eslint": "^8.40.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-config-prettier": "^8.8.0",
+    "vitest": "^0.34.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "jsdom": "^22.1.0",
     "vite-plugin-pwa": "^0.15.1",
     "workbox-build": "^6.5.4",
     "workbox-window": "^6.5.4"
