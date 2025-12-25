@@ -6,6 +6,9 @@ import { useRef, useState } from "react"
 import JobTag from "./JobTag"
 import { deleteJob, setEditJob } from "../features/job/jobSlice"
 import defaultImage from "../assets/defaultLogo.png"
+import logoA from "../assets/Logo.png"
+import logoB from "../assets/milvusmatch_logo.svg"
+import logoC from "../assets/pm_internship_logo.svg"
 
 const JobCard = ({
   _id,
@@ -17,6 +20,7 @@ const JobCard = ({
   status,
   jobDescription,
   createdAt,
+  salary,
   hasApplied,
   applicationStatus,
 }) => {
@@ -25,6 +29,19 @@ const JobCard = ({
   const dispatch = useDispatch()
   const { user } = useSelector((store) => store.user)
   const jobCreationDate = moment(createdAt).format("MMM Do YY")
+  const hash = (str) => {
+    let h = 0
+    for (let i = 0; i < String(str).length; i++) h = (h << 5) - h + String(str).charCodeAt(i)
+    return Math.abs(h)
+  }
+  const seed = hash(_id || company || position)
+  const randomDaysAgo = (seed % 60) + 1
+  const seededDate = moment().subtract(randomDaysAgo, "days").toDate()
+  const postedDate = moment(createdAt || seededDate).format("MMM Do YY")
+  const logos = [defaultImage, logoA, logoB, logoC]
+  const chosenLogo = logos[seed % logos.length]
+  const accents = ["border-rose-500", "border-indigo-500", "border-emerald-500", "border-sky-500", "border-orange-500"]
+  const accentClass = accents[seed % accents.length]
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -48,9 +65,9 @@ const JobCard = ({
         <img
           width={200}
           height={100}
-          src={image || defaultImage}
+          src={image || chosenLogo}
           alt={`${company} Logo`}
-          className="h-10 w-10 rounded-full border border-gray-200 object-contain object-center shadow-sm md:bg-white xl:h-12 xl:w-12"
+          className={`h-10 w-10 rounded-full border object-contain object-center shadow-sm md:bg-white xl:h-12 xl:w-12 ${image ? "border-gray-200" : "border-transparent"}`}
         />
         {/* Job info */}
         <div className=" w-full space-y-1 ">
@@ -63,7 +80,7 @@ const JobCard = ({
           </div>
           {/* Job position - Clickable Link */}
           <Link to={`/job/${_id}`} className="hover:underline">
-            <p className=" font-semibold capitalize text-black hover:text-primary transition-colors">{position}</p>
+            <p className={`font-semibold capitalize text-black hover:text-primary transition-colors border-l-4 pl-2 ${accentClass}`}>{position}</p>
           </Link>
           <div className=" flex justify-between text-sm font-light capitalize text-gray-600 ">
             {/* Job location */}
@@ -77,6 +94,10 @@ const JobCard = ({
               <HiOutlineBriefcase className=" mr-1 " /> {jobType}{" "}
             </p>
           </div>
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>Posted {postedDate}</span>
+            {salary && <span className="font-medium text-gray-700">Salary: {salary}</span>}
+          </div>
         </div>
       </div>
       
@@ -84,7 +105,7 @@ const JobCard = ({
       <div className=" absolute right-5 bottom-3  ">
         {isApplicant ? (
           <div className="flex justify-end">
-             <span className="text-xs text-gray-500 mr-2 self-center"> {jobCreationDate} </span>
+             <span className="text-xs text-gray-500 mr-2 self-center"> {postedDate} </span>
              {!hasApplied && (
                <Link
                  to={`/job/${_id}`}

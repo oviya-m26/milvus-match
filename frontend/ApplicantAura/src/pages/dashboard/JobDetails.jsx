@@ -60,6 +60,15 @@ const JobDetails = () => {
   } = currentJob
 
   const isApplicant = user?.role === "applicant"
+  const hash = (str) => {
+    let h = 0
+    for (let i = 0; i < String(str).length; i++) h = (h << 5) - h + String(str).charCodeAt(i)
+    return Math.abs(h)
+  }
+  const seed = hash(id || company || position)
+  const randomDaysAgo = (seed % 60) + 1
+  const seededDate = moment().subtract(randomDaysAgo, "days").toDate()
+  const displayCreatedAt = moment(createdAt || seededDate).format("MMM Do, YYYY")
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -138,7 +147,7 @@ const JobDetails = () => {
                 <HiOutlineCalendar className="w-5 h-5 mr-3 text-gray-400" />
                 <div>
                   <p className="text-xs text-gray-400">Posted Date</p>
-                  <p className="font-medium">{moment(createdAt).format("MMM Do, YYYY")}</p>
+                  <p className="font-medium">{displayCreatedAt}</p>
                 </div>
               </div>
 
