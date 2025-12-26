@@ -64,6 +64,7 @@ const userSlice = createSlice({
         const { user } = action.payload
         state.isLoading = false
         state.user = user
+        addUserToLocalStorage(user)
         toast.success(`Hello ${user.name}`)
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -132,4 +133,3 @@ const userSlice = createSlice({
 
 export const { logoutUser } = userSlice.actions
 export default userSlice.reducer
-

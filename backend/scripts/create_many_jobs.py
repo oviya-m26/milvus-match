@@ -122,6 +122,7 @@ def create_many_jobs(count: int = 100):
         base_salary = random.randint(15000, 40000)
         salary_range = f"₹{base_salary:,} - ₹{base_salary + random.randint(5000, 15000):,} / month"
         
+        created_at = datetime.utcnow() - timedelta(days=random.randint(1, 90))
         job = Job(
             employer_id=employer.id,
             position=position,
@@ -135,6 +136,7 @@ def create_many_jobs(count: int = 100):
             capacity=random.randint(1, 5),
             state_priority=state,
             application_deadline=datetime.utcnow() + timedelta(days=random.randint(15, 60)),
+            created_at=created_at,
         )
         
         db.session.add(job)

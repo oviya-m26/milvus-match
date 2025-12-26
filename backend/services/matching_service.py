@@ -123,9 +123,18 @@ class MatchingService:
                     )
                 )
         else:
-            for job in (
-                Job.query.order_by(Job.created_at.desc()).limit(top_k).all()
-            ):
+            q = Job.query
+            if candidate.location:
+                q = q.filter(Job.job_location.ilike(f"%{candidate.location}%"))
+            pool_size = max(top_k * 10, 50)
+            pool = q.order_by(Job.created_at.desc()).limit(pool_size).all()
+            if not pool:
+                pool = (
+                    Job.query.order_by(Job.created_at.desc())
+                    .limit(pool_size)
+                    .all()
+                )
+            for job in pool:
                 quota_snapshot = self.quota_service.reservation_snapshot(job)
                 jobs.append(self._score_job(candidate, job, None, quota_snapshot))
 
@@ -144,5 +153,4 @@ class MatchingService:
                 vector_score = dot / (norm_candidate * norm_job)
         quota_snapshot = self.quota_service.reservation_snapshot(job)
         return self._score_job(candidate, job, vector_score, quota_snapshot)
-
 

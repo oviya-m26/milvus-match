@@ -3,11 +3,12 @@ import { toast } from "react-toastify"
 import { getAllJobsThunk, showStatsThunk } from "./allJobsThunk"
 
 const initialFilterState = {
-	search: "",
-	searchJobStatus: "all",
-	searchJobType: "all",
-	sort: "latest",
-	sortOptions: ["latest", "oldest", "a-z", "z-a"],
+  search: "",
+  searchJobStatus: "all",
+  searchJobType: "all",
+  searchLocation: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
 }
 
 const initialState = {
@@ -16,7 +17,7 @@ const initialState = {
 	total_jobs: 0,
 	num_of_pages: 1,
 	page: 1,
-	stats: [],
+	stats: {},
 	monthlyApplications: [],
 	...initialFilterState,
 }

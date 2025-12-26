@@ -11,10 +11,13 @@ const Overview = () => {
   const { isLoading, monthlyApplications } = useSelector(
     (store) => store.allJobs
   )
+  const { user } = useSelector((store) => store.user)
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(showStats())
-  }, [])
+    if (user?.token) {
+      dispatch(showStats())
+    }
+  }, [user?.token, dispatch])
 
   if (isLoading) {
     return <Loading className="h-screen" />
@@ -23,8 +26,8 @@ const Overview = () => {
   return (
     <>
       <StatsContainer />
-      {monthlyApplications.length === 0 && <NoData />}
-      {monthlyApplications.length > 0 && <ChartsContainer />}
+      {monthlyApplications?.length === 0 && <NoData />}
+      {monthlyApplications?.length > 0 && <ChartsContainer />}
     </>
   )
 }

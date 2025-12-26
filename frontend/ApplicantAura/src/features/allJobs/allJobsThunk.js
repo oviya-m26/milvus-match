@@ -4,13 +4,16 @@ import { checkForUnauthorizedResponse } from "../../utils/auth"
 //** ==================== Get all jobs ==================== */
 export const getAllJobsThunk = async (_, thunkAPI) => {
   // Get the initialState of allJobs slice
-  const { page, search, searchJobStatus, searchJobType, sort } =
+  const { page, search, searchJobStatus, searchJobType, searchLocation, sort } =
     thunkAPI.getState().allJobs
 
   // Example url: jobs?status=all&jobType=all&sort=latest&page=1
   let url = `/jobs?status=${searchJobStatus}&jobType=${searchJobType}&sort=${sort}&page=${page}`
   if (search) {
     url = url + `&search=${search}`
+  }
+  if (searchLocation && searchLocation !== "all") {
+    url = url + `&location=${encodeURIComponent(searchLocation)}`
   }
   try {
     const response = await customFetch.get(url)

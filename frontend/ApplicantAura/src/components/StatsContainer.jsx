@@ -4,24 +4,25 @@ import StatItem from "./StatItem"
 
 const StatsContainer = () => {
   const { stats } = useSelector((store) => store.allJobs)
+  const safeStats = stats || {}
   const defaultStats = [
     {
       title: "pending applications",
-      count: stats.pending || 0,
+      count: safeStats?.pending ?? 0,
       icon: <FcBriefcase className="w-8 h-8" />,
       color: "",
       bcg: "",
     },
     {
       title: "interviews scheduled",
-      count: stats.interview || 0,
+      count: safeStats?.interview ?? 0,
       icon: <FcPlanner className="w-8 h-8" />,
       color: "",
       bcg: "",
     },
     {
       title: "opportunities declined",
-      count: stats.declined || 0,
+      count: safeStats?.declined ?? 0,
       icon: <FcDisclaimer className="w-8 h-8" />,
       color: "",
       bcg: "",

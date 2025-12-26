@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import moment from "moment"
 import { HiOutlineLocationMarker, HiOutlineBriefcase, HiOutlineDotsVertical, HiOutlinePencilAlt, HiOutlineTrash } from "react-icons/hi"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import JobTag from "./JobTag"
 import { deleteJob, setEditJob } from "../features/job/jobSlice"
 import defaultImage from "../assets/defaultLogo.png"
@@ -53,8 +53,12 @@ const JobCard = ({
     setMenuDropdown(!menuDropdown)
   }
   
-  // Attach click event listener to the document
-  document.addEventListener("mousedown", handleClickOutside)
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const isApplicant = user?.role === "applicant"
 

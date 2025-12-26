@@ -8,6 +8,9 @@ import pandas as pd
 from backend.app import create_app
 from backend.extensions import bcrypt, db
 from backend.models import Job, User
+from backend.services.embedding_service import encode_text
+from backend.services.milvus_client import MilvusClient
+import uuid
 
 
 def ensure_system_employer() -> User:
@@ -92,7 +95,234 @@ def import_listings(clean_dir: Path):
         else:
             job.application_deadline = None
 
+        text = " ".join(
+            filter(
+                None,
+                [
+                    job.position,
+                    job.company,
+                    job.job_description,
+                    " ".join(job.skills_required or []),
+                ],
+            )
+        )
+        vector = encode_text(text)
+        if vector:
+            job.embedding = vector
+            job.vector_id = job.id
+            try:
+                client = MilvusClient()
+                client.upsert(job.id, vector, {"jobId": job.id, "company": job.company})
+            except Exception:
+                pass
+
     db.session.commit()
+
+def _encode_and_upsert(job: Job):
+    text = " ".join(
+        filter(
+            None,
+            [
+                job.position,
+                job.company,
+                job.job_description,
+                " ".join(job.skills_required or []),
+            ],
+        )
+    )
+    vector = encode_text(text)
+    if vector:
+        job.embedding = vector
+        job.vector_id = job.id
+        try:
+            client = MilvusClient()
+            client.upsert(job.id, vector, {"jobId": job.id, "company": job.company})
+        except Exception:
+            pass
+
+def _safe_str(val) -> str:
+    if val is None or (isinstance(val, float) and pd.isna(val)):
+        return ""
+    return str(val)
+
+def import_kaggle_job_postings(clean_dir: Path, employer: User):
+    candidates = [
+        "job_postings.csv",
+        "kaggle_job_postings.csv",
+        "jobs_postings_clean.csv",
+    ]
+    for name in candidates:
+        path = clean_dir / name
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        for _, row in df.iterrows():
+            title = _safe_str(row.get("title")) or "Job"
+            company = _safe_str(row.get("company")) or "Unknown"
+            skills = parse_skills(row.get("skills"))
+            salary = _safe_str(row.get("salary"))
+            experience = _safe_str(row.get("experience"))
+            location = _safe_str(row.get("location")) or _safe_str(row.get("city")) or _safe_str(row.get("country"))
+            job = Job(
+                id=str(uuid.uuid4()),
+                employer_id=employer.id,
+                position=title,
+                company=company,
+                job_location=location or "India",
+                job_type="internship",
+                status="pending",
+                job_description=_safe_str(row.get("job_description")) or _safe_str(row.get("description")),
+                skills_required=skills,
+                tags=[tag for tag in [experience, "kaggle"] if tag],
+                salary=salary,
+            )
+            db.session.add(job)
+            _encode_and_upsert(job)
+        db.session.commit()
+        print(f"Imported Kaggle job postings from {path}")
+        break
+
+def import_data_science_job_salaries(clean_dir: Path, employer: User):
+    candidates = [
+        "data_science_job_salaries.csv",
+        "data_science_salaries.csv",
+    ]
+    for name in candidates:
+        path = clean_dir / name
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        for _, row in df.iterrows():
+            title = _safe_str(row.get("job_title")) or "Data Role"
+            company_loc = _safe_str(row.get("company_location")) or _safe_str(row.get("employee_residence"))
+            remote_ratio = row.get("remote_ratio")
+            salary_usd = row.get("salary_in_usd")
+            salary = f"${int(salary_usd)} / year" if isinstance(salary_usd, (int, float)) and not pd.isna(salary_usd) else ""
+            tags = []
+            if isinstance(remote_ratio, (int, float)) and not pd.isna(remote_ratio):
+                tags.append(f"remote_ratio:{int(remote_ratio)}")
+            job = Job(
+                id=str(uuid.uuid4()),
+                employer_id=employer.id,
+                position=title,
+                company="Various",
+                job_location=company_loc or "Global",
+                job_type="internship",
+                status="pending",
+                job_description=_safe_str(row.get("job_category")) or "",
+                skills_required=parse_skills(row.get("skills")),
+                tags=tags + ["kaggle"],
+                salary=salary,
+            )
+            db.session.add(job)
+            _encode_and_upsert(job)
+        db.session.commit()
+        print(f"Imported Data Science job salaries from {path}")
+        break
+
+def import_linkedin_jobs(clean_dir: Path, employer: User):
+    candidates = [
+        "linkedin_jobs.csv",
+        "linkedin_job_postings.csv",
+    ]
+    for name in candidates:
+        path = clean_dir / name
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        for _, row in df.iterrows():
+            title = _safe_str(row.get("title")) or "Job"
+            company = _safe_str(row.get("company")) or "Unknown"
+            location = _safe_str(row.get("location"))
+            description = _safe_str(row.get("description")) or _safe_str(row.get("job_description"))
+            skills = parse_skills(row.get("skills"))
+            job = Job(
+                id=str(uuid.uuid4()),
+                employer_id=employer.id,
+                position=title,
+                company=company,
+                job_location=location or "India",
+                job_type="internship",
+                status="pending",
+                job_description=description,
+                skills_required=skills,
+                tags=["linkedin"],
+            )
+            db.session.add(job)
+            _encode_and_upsert(job)
+        db.session.commit()
+        print(f"Imported LinkedIn jobs from {path}")
+        break
+
+def import_levels_fyi(clean_dir: Path, employer: User):
+    candidates = [
+        "levels_fyi.csv",
+        "levels_fyi_salaries.csv",
+    ]
+    for name in candidates:
+        path = clean_dir / name
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        for _, row in df.iterrows():
+            role = _safe_str(row.get("role")) or _safe_str(row.get("title")) or "Tech Role"
+            company = _safe_str(row.get("company")) or "Unknown"
+            level = _safe_str(row.get("level"))
+            location = _safe_str(row.get("location"))
+            comp = _safe_str(row.get("compensation")) or _safe_str(row.get("totalcomp"))
+            job = Job(
+                id=str(uuid.uuid4()),
+                employer_id=employer.id,
+                position=role,
+                company=company,
+                job_location=location or "Global",
+                job_type="internship",
+                status="pending",
+                job_description=f"Level: {level}" if level else "",
+                skills_required=[],
+                tags=[tag for tag in [level, "levels_fyi"] if tag],
+                salary=comp,
+            )
+            db.session.add(job)
+            _encode_and_upsert(job)
+        db.session.commit()
+        print(f"Imported Levels.fyi roles from {path}")
+        break
+
+def import_glassdoor(clean_dir: Path, employer: User):
+    candidates = [
+        "glassdoor_salaries.csv",
+        "glassdoor_jobs.csv",
+    ]
+    for name in candidates:
+        path = clean_dir / name
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        for _, row in df.iterrows():
+            title = _safe_str(row.get("title")) or "Job"
+            company = _safe_str(row.get("company")) or "Unknown"
+            rating = _safe_str(row.get("rating"))
+            salary = _safe_str(row.get("salary")) or _safe_str(row.get("salary_range"))
+            location = _safe_str(row.get("location"))
+            job = Job(
+                id=str(uuid.uuid4()),
+                employer_id=employer.id,
+                position=title,
+                company=company,
+                job_location=location or "India",
+                job_type="internship",
+                status="pending",
+                job_description=f"Rating: {rating}" if rating else "",
+                skills_required=parse_skills(row.get("skills")),
+                tags=["glassdoor"],
+                salary=salary,
+            )
+            db.session.add(job)
+            _encode_and_upsert(job)
+        db.session.commit()
+        print(f"Imported Glassdoor dataset from {path}")
+        break
 
 
 def main():
@@ -111,6 +341,12 @@ def main():
     app = create_app()
     with app.app_context():
         import_listings(clean_dir)
+        employer = ensure_system_employer()
+        import_kaggle_job_postings(clean_dir, employer)
+        import_data_science_job_salaries(clean_dir, employer)
+        import_linkedin_jobs(clean_dir, employer)
+        import_levels_fyi(clean_dir, employer)
+        import_glassdoor(clean_dir, employer)
         print(f"Imported listings from {clean_dir}")
 
 

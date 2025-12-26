@@ -21,14 +21,17 @@ const JobContainer = () => {
     sort,
     sortOptions,
   } = useSelector((store) => store.allJobs)
+  const { user } = useSelector((store) => store.user)
 
   // Dispatch actions
   const dispatch = useDispatch()
 
   // dispatch the getAllJobs action when component is rendering
   useEffect(() => {
-    dispatch(getAllJobs())
-  }, [page, search, searchJobStatus, searchJobType, searchLocation, sort, dispatch])
+    if (user?.token) {
+      dispatch(getAllJobs())
+    }
+  }, [user?.token, page, search, searchJobStatus, searchJobType, searchLocation, sort, dispatch])
 
   const handleSort = (e) => {
     dispatch(handleChange({ name: e.target.name, value: e.target.value }))
