@@ -12,6 +12,7 @@ const initialState = {
   email: "",
   password: "",
   isMember: false,
+  role: "applicant",
 }
 
 const RegisterForm = () => {
@@ -27,7 +28,7 @@ const RegisterForm = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    const { name, email, password, isMember } = values
+    const { name, email, password, isMember, role } = values
     if (!email || !password || (!isMember && !name)) {
       toast.error("Please fill out all fields")
       return
@@ -40,7 +41,7 @@ const RegisterForm = () => {
       name: name, 
       email: email, 
       password: password,
-      role: "applicant" // Default role for new users
+      role: role
     }))
   }
 
@@ -70,6 +71,23 @@ const RegisterForm = () => {
               value={values.name}
               handleChange={handleChange}
             />
+          )}
+          {!values.isMember && (
+            <div className="input_container">
+              <label htmlFor="role" className="label_style">
+                Account type
+              </label>
+              <select
+                id="role"
+                name="role"
+                value={values.role}
+                onChange={handleChange}
+                className=" w-full rounded-md border-none py-3 shadow shadow-gray-100 ring-1 ring-gray-300 transition-all duration-200 ease-in hover:ring-primary focus:outline-none focus:ring-2 md:py-4 "
+              >
+                <option value="applicant">Student</option>
+                <option value="employer">Employer</option>
+              </select>
+            </div>
           )}
           {/* Email */}
           <div className="input_container">

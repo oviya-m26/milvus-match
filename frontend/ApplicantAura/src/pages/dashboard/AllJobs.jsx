@@ -1,6 +1,17 @@
-import { JobContainer, SearchBarFilter } from "../../components"
+import { JobContainer, SearchBarFilter, NoData } from "../../components"
+import { useSelector } from "react-redux"
 
 const AllJobs = () => {
+  const { user } = useSelector((store) => store.user)
+  if (user?.role !== "applicant") {
+    return (
+      <section className="px-5 py-16 text-center md:px-8">
+        <h2 className="text-3xl font-semibold text-gray-900">Applicant-only feature</h2>
+        <p className="mt-3 text-gray-600">Switch to a student account to browse and apply.</p>
+        <NoData />
+      </section>
+    )
+  }
   return (
     <>
       <div className="px-5 md:px-8 py-6">

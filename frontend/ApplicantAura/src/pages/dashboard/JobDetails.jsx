@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { getJob } from "../../features/job/jobSlice"
 import { submitApplication } from "../../features/applications/applicationSlice"
-import { Loading } from "../../components"
+import { Loading, NoData } from "../../components"
 import moment from "moment"
 import { 
   HiOutlineBriefcase, 
@@ -19,6 +19,15 @@ const JobDetails = () => {
   const dispatch = useDispatch()
   const { isLoading, currentJob } = useSelector((store) => store.job)
   const { user } = useSelector((store) => store.user)
+  if (user?.role !== "applicant") {
+    return (
+      <section className="px-5 py-16 text-center md:px-8">
+        <h2 className="text-3xl font-semibold text-gray-900">Applicant-only feature</h2>
+        <p className="mt-3 text-gray-600">Employers cannot view or apply to jobs.</p>
+        <NoData />
+      </section>
+    )
+  }
   const { isLoading: isApplying } = useSelector((store) => store.applications)
 
   const [justification, setJustification] = useState("")

@@ -1,9 +1,18 @@
 import links from "../utils/links"
-import {NavLink} from 'react-router-dom'
+import { NavLink } from "react-router-dom"
+import { useSelector } from "react-redux"
 const SidebarNavLink = () => {
+  const { user } = useSelector((store) => store.user)
+  const role = user?.role
+  const visibleLinks = links.filter((link) => {
+    if (role === "employer") {
+      return ["home", "add opportunity", "profile"].includes(link.text)
+    }
+    return ["home", "all jobs", "internships", "profile"].includes(link.text)
+  })
   return (
     <>
-      {links.map((link) => {
+      {visibleLinks.map((link) => {
         const { id, path, text, icon } = link
         return (
           <NavLink
